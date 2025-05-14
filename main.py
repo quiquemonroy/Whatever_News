@@ -1,8 +1,7 @@
 from datetime import date
-from flask import Flask, render_template, redirect, url_for, flash,request
+from flask import Flask, render_template, redirect, url_for, flash, request
 from flask_bootstrap import Bootstrap5
 from flask_ckeditor import CKEditor
-from flask_gravatar import Gravatar
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user, login_required
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column
@@ -12,7 +11,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 import os
 import smtplib
-# OJETE
+import re
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get("API_KEY")
 ckeditor = CKEditor(app)
@@ -30,15 +30,15 @@ def send_email(text, user, remitent):
     my_email = os.environ.get("EMAIL")
     password = os.environ.get('EMAIL_PASSWORD')
     email = text
+    print(type(email))
     with smtplib.SMTP("smtp.gmail.com") as connection:
         connection.starttls()
         connection.login(user=my_email, password=password)
         connection.sendmail(from_addr=my_email,
-                            to_addrs=os.environ.get("EMAIL_TO"),
-                            msg=f'Subject:Nuevo mensaje de {user} en el blog:\n\n{user.strip().title()} ({remitent}) '
-                                f'escribió:\n{email}')
-
-    print(f"Email enviado")
+                            to_addrs="quiquemonroy@gmail.com",
+                            msg=f'Subject:Nuevo mensaje de {user} en el blog:\n\n{user.title()} ({remitent}) '
+                                f'dijo:\n{email}')
+        print(f"Email enviado")
 
 
 # CREATE DATABASE
@@ -228,13 +228,14 @@ def about():
     return render_template("about.html")
 
 
-@app.route("/contact", methods=["GET","POST"])
+@app.route("/contact", methods=["GET", "POST"])
 def contact():
     if request.method == "POST":
-        send_email(text=request.form.get("message"),user=request.form.get("name"),remitent=request.form.get("email"))
+        print(f'{request.form.get("message")},{request.form.get("name")}, {request.form.get("email")}')
+        send_email(text=request.form.get("message"), user=request.form.get("name"), remitent=request.form.get("email"))
         return render_template("contact.html", msg_sent=True)
     return render_template("contact.html")
 
 
 if __name__ == "__main__":
-    app.run(debug=False, port=5002)
+    app.run(debug=True, port=5002)

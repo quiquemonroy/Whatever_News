@@ -6,12 +6,12 @@ from flask_login import UserMixin, login_user, LoginManager, current_user, logou
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Text, ForeignKey
-from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
-from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 import os
-import smtplib
-import re
+from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
+from send_email import send_email
+
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get("API_KEY")
@@ -24,21 +24,6 @@ login_manager.init_app(app)
 @login_manager.user_loader
 def load_user(user_id):
     return db.get_or_404(User, user_id)
-
-
-def send_email(text, user, remitent):
-    my_email = os.environ.get("EMAIL")
-    password = os.environ.get('EMAIL_PASSWORD')
-    email = text
-    print(type(email))
-    with smtplib.SMTP("smtp.gmail.com") as connection:
-        connection.starttls()
-        connection.login(user=my_email, password=password)
-        connection.sendmail(from_addr=my_email,
-                            to_addrs="quiquemonroy@gmail.com",
-                            msg=f'Subject:Nuevo mensaje de {user} en el blog:\n\n{user.title()} ({remitent}) '
-                                f'dijo:\n{email}')
-        print(f"Email enviado")
 
 
 # CREATE DATABASE

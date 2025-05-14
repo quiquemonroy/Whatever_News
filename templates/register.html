@@ -22,6 +22,14 @@ include "header.html" %}
   <div class="container">
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+
+               {% for category, message in messages %}
+                  <a class="{{ category }}" style="color:red;">{{ message }}</a>
+               {% endfor %}
+            {% endif %}
+        {% endwith %}
         {{ render_form(form) }}
       </div>
     </div>

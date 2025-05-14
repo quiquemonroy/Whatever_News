@@ -46,7 +46,7 @@ class Base(DeclarativeBase):
     pass
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] =  os.environ.get("DB_URI")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URI")
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
@@ -97,6 +97,13 @@ with app.app_context():
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
+        name_check = db.session.execute(db.select(User).where(User.name == form.name.data)).scalars().all()
+        if name_check:
+            flash("elige otro nombre, por favor.")
+            return redirect(url_for("register"))
+        if form.password.data != form.password_confirm.data:
+            flash("Las contraseñas no coinciden")
+            return redirect(url_for("register"))
         result = db.session.execute(db.select(User).where(User.email == form.email.data)).scalars().all()
         if result:
             flash("You where already registered, please log in.")

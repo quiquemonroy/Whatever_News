@@ -1,5 +1,5 @@
 from datetime import date
-from flask import Flask, render_template, redirect, url_for, flash
+from flask import Flask, render_template, redirect, url_for, flash,request
 from flask_bootstrap import Bootstrap5
 from flask_ckeditor import CKEditor
 from flask_gravatar import Gravatar
@@ -11,7 +11,7 @@ from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 import os
-
+import smtplib
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get("API_KEY")
@@ -26,12 +26,27 @@ def load_user(user_id):
     return db.get_or_404(User, user_id)
 
 
+def send_email(text, user, remitent):
+    my_email = os.environ.get("EMAIL")
+    password = os.environ.get('EMAIL_PASSWORD')
+    email = text
+    with smtplib.SMTP("smtp.gmail.com") as connection:
+        connection.starttls()
+        connection.login(user=my_email, password=password)
+        connection.sendmail(from_addr=my_email,
+                            to_addrs=os.environ.get("EMAIL_TO"),
+                            msg=f'Subject:Nuevo mensaje de {user} en el blog:\n\n{user.strip().title()} ({remitent}) '
+                                f'escribió:\n{email}')
+
+    print(f"Email enviado")
+
+
 # CREATE DATABASE
 class Base(DeclarativeBase):
     pass
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URI", "sqlite:///posts.db")
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
@@ -51,8 +66,6 @@ class BlogPost(db.Model):
     author = relationship("User", back_populates="posts")
 
     comments = relationship("Comment", back_populates="parent_post")
-
-
 
 
 class Comment(db.Model):
@@ -146,7 +159,7 @@ def show_post(post_id):
         db.session.add(new_comment)
         db.session.commit()
         print("post added")
-    comments = db.session.execute(db.select(Comment).where(Comment.post_id==post_id)).scalars().all()
+    comments = db.session.execute(db.select(Comment).where(Comment.post_id == post_id)).scalars().all()
     return render_template("post.html", post=requested_post, form=form, comments=comments)
 
 
@@ -208,10 +221,13 @@ def about():
     return render_template("about.html")
 
 
-@app.route("/contact")
+@app.route("/contact", methods=["GET","POST"])
 def contact():
+    if request.method == "POST":
+        send_email(text=request.form.get("message"),user=request.form.get("name"),remitent=request.form.get("email"))
+        return render_template("contact.html", msg_sent=True)
     return render_template("contact.html")
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5002)
+    app.run(debug=False, port=5002)

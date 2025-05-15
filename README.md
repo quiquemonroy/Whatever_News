@@ -46,8 +46,8 @@ A complete blog web application built with Flask, featuring user authentication,
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/quiquemonroy/whatever-news.git
-   cd flask-blog-app
+   git clone https://github.com/quiquemonroy/Whatever_News
+   cd Whatever_News
    ```
 
 2. Create and activate a virtual environment:
@@ -66,8 +66,8 @@ A complete blog web application built with Flask, featuring user authentication,
    ```
    API_KEY=your_secret_key
    DB_URI=sqlite:///posts.db
-   EMAIL=your_email@gmail.com
-   EMAIL_PASSWORD=your_email_password
+   EMAIL=your_email@email.com
+   EMAIL_PASSWORD=your_email_token
    EMAIL_TO=recipient_email@example.com
    ```
 

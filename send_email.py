@@ -24,5 +24,3 @@ def send_email(text, user, remitent):
     s.send_message(msg)  # Sends the message
     del msg  # Deletes the message from memory
 
-
-send_email("Áó´ñeéíó´úñññ", "Quique", "quiquemonroy@gmail.com")

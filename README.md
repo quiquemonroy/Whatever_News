@@ -46,7 +46,7 @@ A complete blog web application built with Flask, featuring user authentication,
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/flask-blog-app.git
+   git clone https://github.com/quiquemonroy/whatever-news.git
    cd flask-blog-app
    ```
 

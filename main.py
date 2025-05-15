@@ -29,7 +29,7 @@ class Base(DeclarativeBase):
     pass
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URI")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
@@ -253,4 +253,4 @@ def user_data(user_id):
     return "culo"#redirect(url_for('get_all_posts'))
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5002)
+    app.run(debug=False, port=5002)

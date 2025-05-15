@@ -39,7 +39,7 @@
                     <th scope="row">{{ user.id }}</th>
                     <td><a href={{ url_for( "user_data", user_id=user.id) }}>{{ user.name }}</a></td>
                     <td>{{ user.email }}</td>
-                    <td>{{ user.comments }}</td>
+                    <td>{{ user.comments|count }}</td>
 
                   </tr>
 
@@ -48,19 +48,34 @@
       </table>
     </div>
 <!-- POSTS-->
-    <div class="col-md-6 col-lg-6 col-xl-6">
+          <div class="col-md-6 col-lg-6 col-xl-6 ">
       <p> POSTS</p>
-      <ul class="list-group list-group-flush">
-        {% for post in all_posts %}
-          <li class="list-group-item">
-            <a href="{{ url_for('show_post', post_id=post.id) }}">{{ post.title }}</a>
-            <a href="#">{{post.author.name}}</a>
-            <a href="{{url_for('edit_post', post_id=post.id) }}" title="Editar">📝</a>
-            <a href="{{url_for('delete_post', post_id=post.id) }}" title="Borrar Post">🗑️</a>
-          </li>
-        {% endfor %}
-      </ul>
-      </div>
+      <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">id</th>
+              <th scope="col">Title</th>
+              <th scope="col">Author</th>
+              <th scope="col">Date</th>
+              <th scope="col">nºcomments</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for post in all_posts %}
+                 <tr>
+
+                    <th scope="row">{{ post.id }}</th>
+                    <td><a href={{ url_for( "show_post", post_id=post.id) }}>{{ post.title }}</a></td>
+                    <td>{{ post.author.name }}</td>
+                    <td>{{ post.date }}</td>
+                    <td>{{ post.comments|count }}</td>
+
+                  </tr>
+
+            {% endfor %}
+          </tbody>
+      </table>
+    </div>
   </div>
 </div>
 

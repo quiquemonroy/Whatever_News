@@ -2,9 +2,9 @@
 
 <!-- Page Header-->
 <header
-  class="masthead"
-  style="background-image: url('../static/assets/img/home-bg.jpg')"
->
+        class="masthead"
+        style="background-image: url('../static/assets/img/home-bg.jpg')"
+        xmlns="http://www.w3.org/1999/html">
   <div class="container position-relative px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
@@ -19,7 +19,23 @@
 </header>
 <!-- Main Content-->
 <div class="container px-4 px-lg-5">
+<!--  <div class="row gx-5 justify-content-center">-->
+<!--    <div class="col-md-5 col-lg-4 col-xl-3"><p>Archivo</p>-->
+<!--    </div>-->
+<!--  </div>-->
   <div class="row gx-4 gx-lg-5 justify-content-center">
+    <div class="col-md-2 col-lg-2 col-xl-2 ">
+      <p> Archivo
+      </p>
+      {% for post in all_posts %}
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <a href={{ url_for("show_post", post_id=post.id) }} data-bs-toggle="tooltip" data-bs-title="Default tooltip" >{{ post.title }}</a>
+        </li>
+      </ul>
+      {% endfor %}
+      </p>
+    </div>
     <div class="col-md-10 col-lg-8 col-xl-7">
       <!-- Post preview-->
       {% for post in all_posts %}
@@ -33,7 +49,8 @@
           <a href="#">{{post.author.name}}</a>
           on {{post.date}}
           {% if current_user.is_authenticated and current_user.id == 1%}
-          <a href="{{url_for('delete_post', post_id=post.id) }}">✘</a>
+          <a href="{{url_for('edit_post', post_id=post.id) }}" data-bs-toggle="tooltip" data-bs-title="Default tooltip">📝</a>
+          <a href="{{url_for('delete_post', post_id=post.id) }}">🗑️</a>
           {% endif %}
         </p>
       </div>

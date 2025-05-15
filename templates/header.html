@@ -75,11 +75,10 @@
             </li>
             {% if current_user.is_authenticated %}
             <li class="nav-item">
-              <a
-                class="nav-link px-lg-3 py-3 py-lg-4"
-                href="{{ url_for('logout') }}"
-                >Log Out</a
-              >
+              <a class="nav-link px-lg-3 py-3 py-lg-4" href="{{ url_for('control_panel') }}">Panel de control</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link px-lg-3 py-3 py-lg-4" href="{{ url_for('logout') }}">Log Out</a>
             </li>
             {% else %}
             <li class="nav-item">

@@ -11,8 +11,6 @@ import os
 from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 from send_email import send_email
 
-
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get("API_KEY")
 ckeditor = CKEditor(app)
@@ -78,6 +76,12 @@ with app.app_context():
     db.create_all()
 
 
+def get_posts():
+    posts = db.session.execute(db.select(BlogPost)).scalars().all()
+    posts.reverse()
+    return posts
+
+
 @app.route('/register', methods=["GET", "POST"])
 def register():
     form = RegisterForm()
@@ -134,11 +138,7 @@ def logout():
 
 @app.route('/')
 def get_all_posts():
-    result = db.session.execute(db.select(BlogPost))
-    posts = result.scalars().all()
-    posts.reverse()
-
-    return render_template("index.html", all_posts=posts)
+    return render_template("index.html", all_posts=get_posts())
 
 
 @app.route("/post/<int:post_id>", methods=["POST", "GET"])
@@ -218,10 +218,23 @@ def about():
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
     if request.method == "POST":
-        print(f'{request.form.get("message")},{request.form.get("name")}, {request.form.get("email")}')
         send_email(text=request.form.get("message"), user=request.form.get("name"), remitent=request.form.get("email"))
         return render_template("contact.html", msg_sent=True)
     return render_template("contact.html")
+
+
+@app.route("/control-panel")
+@login_required
+def control_panel():
+    if current_user.id == 1:
+        users = db.session.execute(db.select(User)).scalars().all()
+        return render_template("control-panel.html", all_posts=get_posts(), users=users)
+    return redirect(url_for('get_all_posts'))
+
+@app.route("/user/<user_id>")
+def user_data(user_id):
+    user = db.get_or_404(User,user_id)
+    return f"{user.name} - {user.email} - {user.posts} - {user.comments}"
 
 
 if __name__ == "__main__":

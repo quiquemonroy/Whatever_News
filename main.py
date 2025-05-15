@@ -234,7 +234,9 @@ def control_panel():
 @app.route("/user/<user_id>")
 def user_data(user_id):
     user = db.get_or_404(User,user_id)
-    return f"{user.name} - {user.email} - {user.posts} - {user.comments}"
+    for coment in user.comments:
+        print(coment)
+    return f"{user.name} - {user.email} - {user.posts} - {len(user.comments)}"
 
 
 if __name__ == "__main__":

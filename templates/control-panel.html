@@ -20,33 +20,34 @@
 <!-- Main Content-->
 <div class="container px-4 px-lg-5">
   <div class="row gx-4 gx-lg-5 justify-content-center">
+<!-- USUARIOS-->
     <div class="col-md-6 col-lg-6 col-xl-6 ">
       <p> USUARIOS</p>
       <table class="table table-hover">
-  <thead>
-    <tr>
-      <th scope="col">id</th>
-      <th scope="col">Name</th>
-      <th scope="col">Email</th>
-      <th scope="col">nºcomments</th>
-    </tr>
-  </thead>
-  <tbody>
-   {% for user in users %}
+          <thead>
+            <tr>
+              <th scope="col">id</th>
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">nºcomments</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in users %}
+                 <tr>
 
-     <tr>
+                    <th scope="row">{{ user.id }}</th>
+                    <td><a href={{ url_for( "user_data", user_id=user.id) }}>{{ user.name }}</a></td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.comment }}</td>
 
-        <th scope="row">{{ user.id }}</th>
-        <td><a href={{ url_for("user_data", user_id=user.id) }}>{{ user.name }}</a></td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.comment }}</td>
+                  </tr>
 
-      </tr>
-
-   {% endfor %}
-  </tbody>
-</table>
+            {% endfor %}
+          </tbody>
+      </table>
     </div>
+<!-- POSTS-->
     <div class="col-md-6 col-lg-6 col-xl-6">
       <p> POSTS</p>
       <ul class="list-group list-group-flush">
@@ -59,12 +60,7 @@
           </li>
         {% endfor %}
       </ul>
-      <!-- Divider-->
-
-
-
       </div>
-    </div>
   </div>
 </div>
 

@@ -30,3 +30,8 @@ class LoginForm(FlaskForm):
 class CommentForm(FlaskForm):
     body = CKEditorField("Blog Content", validators=[DataRequired()])
     submit = SubmitField(label="Comment")
+
+class EditUser(FlaskForm):
+    old_password = PasswordField(label="Actual Password", validators=(DataRequired()))
+    new_password = PasswordField(label="New Password", validators=(DataRequired()))
+    new_password_again = PasswordField(label="Repite Password", validators=(DataRequired()))

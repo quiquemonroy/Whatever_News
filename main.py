@@ -233,8 +233,10 @@ def control_panel():
 
 @app.route("/user/<user_id>")
 def user_data(user_id):
-    user = db.get_or_404(User,user_id)
-    return f"{user.name} - {user.email} - {user.posts} - {user.comments[0].body}"
+    if current_user.id == 1 or current_user.id == user_id:
+        user = db.get_or_404(User,user_id)
+        return render_template("profile.html", user=user)
+    return redirect(url_for('get_all_posts'))
 
 
 if __name__ == "__main__":

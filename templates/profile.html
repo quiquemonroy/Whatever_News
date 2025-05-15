@@ -1,0 +1,57 @@
+{% include "header.html" %}
+{% from "bootstrap5/form.html" import render_form %}
+<!-- Page Header-->
+<header
+        class="masthead"
+        style="background-image: url('../static/assets/img/home-bg.jpg')"
+        xmlns="http://www.w3.org/1999/html">
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="site-heading">
+          <span class="subheading">desde 2022</span>
+          <h1>Whatever News</h1>
+          <span class="subheading">mira, yo qué sé</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- Main Content-->
+<div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-left">
+                 <p class="post-meta" >
+                <h2>{{ user.name }}</h2><h6>{{ user.email }}</h6>
+                    </p>
+    </div>
+  <div class="row gx-4 gx-lg-5 justify-content-left">
+      <div class="col-md-4 col-lg-5 col-xl-6">
+<!--          <p class="post-meta" >-->
+<!--              <h2>{{ user.name }}</h2>-->
+<!--               {{ user.email }}-->
+<!--          </p>-->
+
+          <ul class="list-group">
+              <li class="list-group-item ist-group-item-action active"><h4>COMMENTS</h4></li>
+              {% for comment in user.comments %}
+               <li class="list-group-item"><a href={{ url_for("show_post", post_id=comment.post_id) }} class="list-group-item list-group-item-action">{{ comment.body|safe }}</a></li>
+              {% endfor %}
+          </ul>
+      </div>
+      <div class="col-md-2 col-lg-5 col-xl-4">
+        {% if user.posts %}
+          <ul class="list-group">
+              <li class="list-group-item ist-group-item-action active"><h4>POSTS</h4></li>
+                 {% for post in user.posts %}
+              <li class="list-group-item">
+                  <a href={{ url_for("show_post", post_id=post.id) }}> {{ post.title }} -  {{post.date}}</a>
+              </li>
+                 {% endfor  %}
+          </ul>
+        {% endif %}
+<!--          {{ render_form(form) }}-->
+      </div>
+  </div>
+</div>
+
+{% include "footer.html" %}

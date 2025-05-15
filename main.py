@@ -8,7 +8,7 @@ from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Text, ForeignKey
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
-from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
+from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm,EditUser
 from send_email import send_email
 
 app = Flask(__name__)
@@ -124,7 +124,7 @@ def login():
                 return redirect(url_for("get_all_posts"))
             else:
                 print("nope")
-                return "invalid password"
+        #     TODO: Terminar de capturar los errores cuando la contraseña está mal
         flash("try again!")
     return render_template("login.html", form=form)
 
@@ -231,13 +231,26 @@ def control_panel():
         return render_template("control-panel.html", all_posts=get_posts(), users=users)
     return redirect(url_for('get_all_posts'))
 
-@app.route("/user/<user_id>")
+@app.route("/user/<user_id>", methods=["GET","POST"])
+@login_required
 def user_data(user_id):
-    if current_user.id == 1 or current_user.id == user_id:
+    print(current_user.id)
+    if current_user.id == 1 or current_user.id == int(user_id):
         user = db.get_or_404(User,user_id)
-        return render_template("profile.html", user=user)
-    return redirect(url_for('get_all_posts'))
+        form = EditUser()
+        if form.validate_on_submit():
+            if check_password_hash(user.password, form.old_password.data):
+                if form.new_password.data == form.new_password_again.data:
+                    user.password = generate_password_hash(form.new_password.data, method="pbkdf2:sha256:600000",
+                                                            salt_length=8)
+                    db.session.commit()
+                    flash("Datos actualizados")
+        # TODO: terminar de capturar los errores de cambiar la contrseña
+        # TODO: Terminar el cmabio de nombre
 
+
+        return render_template("profile.html", user=user, form=form)
+    return "culo"#redirect(url_for('get_all_posts'))
 
 if __name__ == "__main__":
     app.run(debug=True, port=5002)

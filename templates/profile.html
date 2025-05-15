@@ -38,18 +38,25 @@
               {% endfor %}
           </ul>
       </div>
+
       <div class="col-md-2 col-lg-5 col-xl-4">
-        {% if user.posts %}
-          <ul class="list-group">
-              <li class="list-group-item ist-group-item-action active"><h4>POSTS</h4></li>
-                 {% for post in user.posts %}
-              <li class="list-group-item">
-                  <a href={{ url_for("show_post", post_id=post.id) }}> {{ post.title }} -  {{post.date}}</a>
-              </li>
-                 {% endfor  %}
-          </ul>
-        {% endif %}
-<!--          {{ render_form(form) }}-->
+          <div>
+            {% if user.posts %}
+              <ul class="list-group">
+                  <li class="list-group-item ist-group-item-action active"><h4>POSTS</h4></li>
+                     {% for post in user.posts %}
+                  <li class="list-group-item">
+                      <a href={{ url_for("show_post", post_id=post.id) }}> {{ post.title }} -  {{post.date}}</a>
+                  </li>
+                     {% endfor  %}
+              </ul>
+              <br>
+            {% endif %}
+          </div>
+          <div class="p-3 mb-2 bg-warning text-dark">
+              <h5>Actualizar datos</h5>
+            {{ render_form(form) }}
+          </div>
       </div>
   </div>
 </div>

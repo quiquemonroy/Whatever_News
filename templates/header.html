@@ -48,7 +48,7 @@
            <img src="../static/assets/img/logo_transparente.png" width="30" height="30" alt="">
         </a>
         {% if current_user.is_authenticated %}
-        <a class="navbar-brand" href={{url_for("get_all_posts")}}>{{ current_user.name }} en Whatever News</a>
+        <a class="navbar-brand" href={{url_for("user_data", user_id=current_user.id )}}>{{ current_user.name }} en Whatever News</a>
         {% else %}
         <a class="navbar-brand" href={{url_for("get_all_posts")}}>Whatever News</a>
         {% endif %}

@@ -253,4 +253,4 @@ def user_data(user_id):
     return "culo"#redirect(url_for('get_all_posts'))
 
 if __name__ == "__main__":
-    app.run(debug=False, port=5002)
+    app.run(debug=False, port=8080, host="0.0.0.0")

@@ -71,7 +71,12 @@
       {% endif %}
       <!-- Pager-->
       <div class="d-flex justify-content-end mb-4">
-        <a class="btn btn-secondary text-uppercase" href="#!">Older Posts →</a>
+        {% if prev_url %}
+        <a class="btn btn-secondary text-uppercase" href={{ prev_url }}>⬅ Posteriores </a>
+        {% endif %}
+        {% if next_url %}
+        <a class="btn btn-secondary text-uppercase" href={{ next_url }}>Anteriores ⮕</a>
+        {% endif %}
       </div>
     </div>
   </div>

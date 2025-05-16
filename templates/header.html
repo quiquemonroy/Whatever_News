@@ -42,15 +42,15 @@
   </head>
   <body>
     <!-- Navigation-->
-    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+    <nav class="navbar navbar-expand-lg navbar-dark" id="mainNav">
       <div class="container px-4 px-lg-5">
         <a class="navbar-brand" href={{url_for("get_all_posts")}}>
-           <img src="../static/assets/img/logo_transparente.png" width="30" height="30" alt="">
+           <img src="../static/assets/img/logo_transparente.png" width="30" height="30" alt="logo">
         </a>
         {% if current_user.is_authenticated %}
-        <a class="navbar-brand" href={{url_for("user_data", user_id=current_user.id )}}>{{ current_user.name }} en Whatever News</a>
+        <a class="navbar-brand text-warning" href={{url_for("user_data", user_id=current_user.id )}}>{{ current_user.name }} en Whatever News</a>
         {% else %}
-        <a class="navbar-brand" href={{url_for("get_all_posts")}}>Whatever News</a>
+        <a class="navbar-brand text-warning" href={{url_for("get_all_posts")}}>Whatever News</a>
         {% endif %}
         <button
           class="navbar-toggler"
@@ -66,9 +66,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ms-auto py-4 py-lg-0">
-            <li class="nav-item">
+            <li class="nav-item ">
               <a
-                class="nav-link px-lg-3 py-3 py-lg-4"
+                class="nav-link text-warning px-lg-3 py-3 py-lg-4"
                 href="{{ url_for('get_all_posts') }}"
                 >Inicio</a
               >
@@ -76,28 +76,28 @@
             {% if current_user.is_authenticated and current_user.id == 1%}
 
             <li class="nav-item">
-              <a class="nav-link px-lg-3 py-3 py-lg-4" href="{{ url_for('control_panel') }}">Panel de control</a>
+              <a class="nav-link text-warning px-lg-3 py-3 py-lg-4" href="{{ url_for('control_panel') }}">Panel de control</a>
             </li>
 
             <li class="nav-item">
-              <a class="nav-link px-lg-3 py-3 py-lg-4" href="{{ url_for('logout') }}">Log Out</a>
+              <a class="nav-link text-warning px-lg-3 py-3 py-lg-4" href="{{ url_for('logout') }}">Log Out</a>
             </li>
 
             {% elif current_user.is_authenticated  %}
             <li class="nav-item">
-              <a class="nav-link px-lg-3 py-3 py-lg-4" href="{{ url_for('logout') }}">Log Out</a>
+              <a class="nav-link text-warning px-lg-3 py-3 py-lg-4" href="{{ url_for('logout') }}">Log Out</a>
             </li>
             {% else %}
             <li class="nav-item">
               <a
-                class="nav-link px-lg-3 py-3 py-lg-4"
+                class="nav-link text-warning px-lg-3 py-3 py-lg-4"
                 href="{{ url_for('login') }}"
                 >Login</a
               >
             </li>
             <li class="nav-item">
               <a
-                class="nav-link px-lg-3 py-3 py-lg-4"
+                class="nav-link text-warning px-lg-3 py-3 py-lg-4"
                 href="{{ url_for('register') }}"
                 >Regístrate</a
               >
@@ -106,14 +106,14 @@
 
             <li class="nav-item">
               <a
-                class="nav-link px-lg-3 py-3 py-lg-4"
+                class="nav-link text-warning px-lg-3 py-3 py-lg-4"
                 href="{{ url_for('about') }}"
                 >Sobre Mi</a
               >
             </li>
             <li class="nav-item">
               <a
-                class="nav-link px-lg-3 py-3 py-lg-4"
+                class="nav-link text-warning px-lg-3 py-3 py-lg-4"
                 href="{{ url_for('contact') }}"
                 >Contacto</a
               >

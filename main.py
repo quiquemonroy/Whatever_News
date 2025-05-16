@@ -8,7 +8,7 @@ from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Text, ForeignKey
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
-from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm,EditUser
+from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm, EditUser
 from send_email import send_email
 
 app = Flask(__name__)
@@ -76,6 +76,11 @@ with app.app_context():
     db.create_all()
 
 
+def paginate_posts(page):
+    paginate = db.paginate(db.select(BlogPost).order_by(BlogPost.id.desc()), page=page, per_page=5)
+    return paginate
+
+
 def get_posts():
     posts = db.session.execute(db.select(BlogPost)).scalars().all()
     posts.reverse()
@@ -88,10 +93,10 @@ def register():
     if form.validate_on_submit():
         name_check = db.session.execute(db.select(User).where(User.name == form.name.data)).scalars().all()
         if name_check:
-            flash("elige otro nombre, por favor.","error")
+            flash("elige otro nombre, por favor.", "error")
             return redirect(url_for("register"))
         if form.password.data != form.password_confirm.data:
-            flash("Las contraseñas no coinciden","error")
+            flash("Las contraseñas no coinciden", "error")
             return redirect(url_for("register"))
         result = db.session.execute(db.select(User).where(User.email == form.email.data)).scalars().all()
         if result:
@@ -136,9 +141,15 @@ def logout():
     return redirect(url_for('get_all_posts'))
 
 
-@app.route('/')
+@app.route('/', methods=["GET", "POST"])
+@app.route('/index', methods=["GET", "POST"])
 def get_all_posts():
-    return render_template("index.html", all_posts=get_posts())
+    page = request.args.get("page", 1, type=int)
+    pagination = paginate_posts(page)
+    next_url = url_for('get_all_posts', page=pagination.next_num) if pagination.has_next else None
+    prev_url = url_for('get_all_posts', page=pagination.prev_num) if pagination.has_prev else None
+
+    return render_template("index.html", all_posts=pagination, next_url=next_url, prev_url=prev_url)
 
 
 @app.route("/post/<int:post_id>", methods=["POST", "GET"])
@@ -231,26 +242,27 @@ def control_panel():
         return render_template("control-panel.html", all_posts=get_posts(), users=users)
     return redirect(url_for('get_all_posts'))
 
-@app.route("/user/<user_id>", methods=["GET","POST"])
+
+@app.route("/user/<user_id>", methods=["GET", "POST"])
 @login_required
 def user_data(user_id):
     print(current_user.id)
     if current_user.id == 1 or current_user.id == int(user_id):
-        user = db.get_or_404(User,user_id)
+        user = db.get_or_404(User, user_id)
         form = EditUser()
         if form.validate_on_submit():
             if check_password_hash(user.password, form.old_password.data):
                 if form.new_password.data == form.new_password_again.data:
                     user.password = generate_password_hash(form.new_password.data, method="pbkdf2:sha256:600000",
-                                                            salt_length=8)
+                                                           salt_length=8)
                     db.session.commit()
                     flash("Datos actualizados", "success")
         # TODO: terminar de capturar los errores de cambiar la contrseña
         # TODO: Terminar el cmabio de nombre
 
-
         return render_template("profile.html", user=user, form=form)
-    return "culo"#redirect(url_for('get_all_posts'))
+    return "culo"  # redirect(url_for('get_all_posts'))
+
 
 if __name__ == "__main__":
-    app.run(debug=False, port=8080, host="0.0.0.0")
+    app.run(debug=True, port=8080, host="0.0.0.0")

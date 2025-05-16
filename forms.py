@@ -14,17 +14,17 @@ class CreatePostForm(FlaskForm):
 
 
 class RegisterForm(FlaskForm):
-    name = StringField(label="Name", validators=[DataRequired()])
-    email = EmailField(label="Email", validators=[DataRequired()])
-    password = PasswordField(label="Password", validators=[DataRequired()])
-    password_confirm = PasswordField(label="Confirm Password", validators=[DataRequired()])
-    submit = SubmitField(label="Submit")
+    name = StringField(label="Name", validators=[DataRequired()],render_kw={"placeholder": "nombre"})
+    email = EmailField(label="Email", validators=[DataRequired()],render_kw={"placeholder": "email"})
+    password = PasswordField(label="Password", validators=[DataRequired()],render_kw={"placeholder": "password"})
+    password_confirm = PasswordField(label="Confirm Password", validators=[DataRequired()],render_kw={"placeholder": "confirma password"})
+    submit = SubmitField(label="REGISTRARSE")
 
 
 class LoginForm(FlaskForm):
-    email = EmailField(label="Email", validators=[DataRequired()])
-    password = PasswordField(label="Password", validators=[DataRequired()])
-    submit = SubmitField(label="Submit")
+    email = EmailField(label="Email", validators=[DataRequired()],render_kw={"placeholder": "email"})
+    password = PasswordField(label="Password", validators=[DataRequired()],render_kw={"placeholder": "Password"})
+    submit = SubmitField(label="LOGIN")
 
 
 class CommentForm(FlaskForm):

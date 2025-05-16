@@ -21,9 +21,14 @@ include "header.html" %}
 
 <main class="mb-4">
   <div class="container">
-    <div class="row">
-
-      <div class="col-lg-8 col-md-10 mx-auto">
+<!--    <div class="row" >-->
+<!--          <div class="col-lg-3 col-md-4 mx-auto text-right">-->
+<!--            <p class="font-weight-light"><a href="">Olvidé mi contraseña</a></p>-->
+<!--          </div>-->
+<!--    </div>-->
+    <div class="row ">
+        <br>
+      <div class="col-lg-3 col-md-4 mx-auto bg-warning text-dark border rounded-3">
           {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
 
@@ -32,7 +37,7 @@ include "header.html" %}
                    {% endfor %}
                 {% endif %}
             {% endwith %}
-                  {{ render_form(form) }}
+                  {{ render_form(form, button_style="warning", form_inline_classes="m-4", button_size="sm", form_type="inline") }}
       </div>
     </div>
   </div>

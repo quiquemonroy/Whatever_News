@@ -88,14 +88,14 @@ def register():
     if form.validate_on_submit():
         name_check = db.session.execute(db.select(User).where(User.name == form.name.data)).scalars().all()
         if name_check:
-            flash("elige otro nombre, por favor.")
+            flash("elige otro nombre, por favor.","error")
             return redirect(url_for("register"))
         if form.password.data != form.password_confirm.data:
-            flash("Las contraseñas no coinciden")
+            flash("Las contraseñas no coinciden","error")
             return redirect(url_for("register"))
         result = db.session.execute(db.select(User).where(User.email == form.email.data)).scalars().all()
         if result:
-            flash("You where already registered, please log in.")
+            flash("You where already registered, please log in.", "error")
             return redirect(url_for("login"))
         else:
             new_user = User(name=form.name.data,
@@ -105,7 +105,7 @@ def register():
                             )
             db.session.add(new_user)
             db.session.commit()
-            flash("Successfully Registered!")
+            flash("Successfully Registered!", "success")
             return redirect(url_for("login"))
 
     return render_template("register.html", form=form)
@@ -125,7 +125,7 @@ def login():
             else:
                 print("nope")
         #     TODO: Terminar de capturar los errores cuando la contraseña está mal
-        flash("try again!")
+        flash("try again!", "warning")
     return render_template("login.html", form=form)
 
 
@@ -244,7 +244,7 @@ def user_data(user_id):
                     user.password = generate_password_hash(form.new_password.data, method="pbkdf2:sha256:600000",
                                                             salt_length=8)
                     db.session.commit()
-                    flash("Datos actualizados")
+                    flash("Datos actualizados", "success")
         # TODO: terminar de capturar los errores de cambiar la contrseña
         # TODO: Terminar el cmabio de nombre
 

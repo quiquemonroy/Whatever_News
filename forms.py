@@ -35,6 +35,6 @@ class CommentForm(FlaskForm):
 class EditUser(FlaskForm):
     new_name = StringField(label="Name")
     old_password = PasswordField(label="Actual Password", validators=[DataRequired()])
-    new_password = PasswordField(label="New Password", validators=[DataRequired()])
-    new_password_again = PasswordField(label="Repite Password", validators=[DataRequired()])
+    new_password = PasswordField(label="New Password")
+    new_password_again = PasswordField(label="Repite Password")
     submit = SubmitField(label="Submit")

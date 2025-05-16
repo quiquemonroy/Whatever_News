@@ -5,7 +5,7 @@ from flask_ckeditor import CKEditor
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user, login_required
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import Integer, String, Text, ForeignKey
+from sqlalchemy import Integer, String, Text
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm, EditUser
@@ -251,14 +251,22 @@ def user_data(user_id):
         user = db.get_or_404(User, user_id)
         form = EditUser()
         if form.validate_on_submit():
+
             if check_password_hash(user.password, form.old_password.data):
-                if form.new_password.data == form.new_password_again.data:
-                    user.password = generate_password_hash(form.new_password.data, method="pbkdf2:sha256:600000",
-                                                           salt_length=8)
+                if form.new_name and len(form.new_name.data) > 0:
+                    user.name = form.new_name.data
                     db.session.commit()
-                    flash("Datos actualizados", "success")
-        # TODO: terminar de capturar los errores de cambiar la contrseña
-        # TODO: Terminar el cmabio de nombre
+                    flash("Nombre actualizado", "success")
+                if len(form.new_password.data) > 0 :
+                    if form.new_password.data == form.new_password_again.data:
+                        user.password = generate_password_hash(form.new_password.data, method="pbkdf2:sha256:600000",
+                                                               salt_length=8)
+                        db.session.commit()
+                        flash("Contraseña actualizada", "success")
+                    else:
+                        flash("Las contraseñas no coinciden", "error")
+            else:
+                flash("Contraseña incorrecta", "error")
 
         return render_template("profile.html", user=user, form=form)
     return "culo"  # redirect(url_for('get_all_posts'))
